@@ -50,11 +50,10 @@ int main()
 //      LED1_BLINK_INIT();  //灯的初始化
         USARTx_CFG();       //串口初始化
         uart6_sample();
-        gataway();
+           gataway();
         uart2_sample();
         mailbox_sample();
         uart3_sample();
-
 
         Fibcom_L610_init();//L610初始化
         sendandreceive = rt_thread_create("thread3", sendandprocess, RT_NULL,//线程2发送给串口3
