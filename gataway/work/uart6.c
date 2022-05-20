@@ -63,13 +63,13 @@ int gata(int i)
      {
          ch = uart6_sample_get_char();
 
-
+         //rt_kprintf("%s",ch);
          //rt_device_write(serial, 0, &ch, 1);
          //rt_kprintf("d==%s\r\n",ch);
          if(ch == DATA_CMD_END)
          {
              data3[i++] = '\0';
-             rt_kprintf("data3=%s\r\n",data3);
+             rt_kprintf("%s\r\n",data3);
              gata(i);
              //uart_putstr(USART2,"data=%s\r\n",data);
              i = 0;
@@ -87,8 +87,8 @@ int gata(int i)
 
  void gataway(void)
   {
-       uart_putstr(UART6,"+++");
-       rt_thread_mdelay(100);
+        uart_putstr(UART6,"+++");
+        rt_thread_mdelay(100);
        uart_putstr(UART6,"AT+CWJAP=\"zl\",\"985505401\"\r\n");
        rt_thread_mdelay(20000);
        uart_putstr(UART6,"AT+CIPSTART=\"TCP\",\"api.zhiyun360.com\",28082\r\n");

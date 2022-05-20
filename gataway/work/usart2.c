@@ -19,7 +19,7 @@ static struct rt_thread thread1;
     char *str;
     int i;
     static int k=1;
-    int t=600;
+    int t=500;
     uint8_t t1[]={0x0a,0X0b,0X14,0xaa,0x0d};//位标1地址0x0a,0X0b,0X14,地址2571，通道20
     uint8_t t2[]={0x0a,0X0c,0X14,0xaa,0x0d};//位标2地址0x0a,0X0c,0X14,地址2572，通道20
     uint8_t t3[]={0x0a,0xdd,0X14,0xaa,0x0d};//位标3地址0x0a,0X0d,0X14,地址2573，通道20
@@ -33,35 +33,30 @@ static struct rt_thread thread1;
                     uart_putstr(USART2,"%c",t1[i]); //以单个字符的方式输出
                 fla=1;
                 k=0;
+                uart_putstr(USART1,"receive 1");
                 rt_thread_mdelay(t);
-                uart_putstr(USART1,"receive 1\r\n");
               }
         else {
                 if (rt_mb_recv(&mb, (rt_ubase_t *)&str, RT_WAITING_FOREVER) == RT_EOK)
                    {
                         for(i=0;i<5;i++)
                             uart_putstr(USART2,"%c",t1[i]); //以单个字符的方式输出
+
                         fla=1;
-                        uart_putstr(USART1,"second1\r\n");
+                        uart_putstr(USART1,"receive 1");
                         rt_thread_mdelay(t);//防止连续接收邮件
-                        uart_putstr(USART1,"receive 1\r\n");
-//                        if (rt_mb_recv(&mb, (rt_ubase_t *)&str, RT_WAITING_FOREVER) == RT_EOK)
-//                              {
-//                                  fla=1;
-//                              }
+
                    }
                 }
                 /* 从邮箱中收取邮件 */
-
                 if (rt_mb_recv(&mb, (rt_ubase_t *)&str, RT_WAITING_FOREVER) == RT_EOK)
                 {
                     for(i=0;i<5;i++)
                               uart_putstr(USART2,"%c",t2[i]); //以单个字符的方式输出
 
                     fla=1;
-
+                    uart_putstr(USART1,"receive 2");
                     rt_thread_mdelay(t);
-                    uart_putstr(USART1,"receive 2\r\n");
                 }
                 if (rt_mb_recv(&mb, (rt_ubase_t *)&str, RT_WAITING_FOREVER) == RT_EOK)
                {
@@ -69,9 +64,8 @@ static struct rt_thread thread1;
                             uart_putstr(USART2,"%c",t3[i]); //以单个字符的方式输出
 
                     fla=1;
-
+                    uart_putstr(USART1,"receive 3");
                     rt_thread_mdelay(t);
-                    uart_putstr(USART1,"receive 3\r\n");
                 }
                 if (rt_mb_recv(&mb, (rt_ubase_t *)&str, RT_WAITING_FOREVER) == RT_EOK)
               {
@@ -79,9 +73,8 @@ static struct rt_thread thread1;
                    uart_putstr(USART2,"%c",t4[i]); //以单个字符的方式输出
 
               fla=1;
-
+              uart_putstr(USART1,"receive 4");
               rt_thread_mdelay(t);
-              uart_putstr(USART1,"receive 4\r\n");
                }
                 if (rt_mb_recv(&mb, (rt_ubase_t *)&str, RT_WAITING_FOREVER) == RT_EOK)
                            {
@@ -89,11 +82,9 @@ static struct rt_thread thread1;
                        uart_putstr(USART2,"%c",t5[i]); //以单个字符的方式输出
 
                 fla=1;
-
+                uart_putstr(USART1,"receive 5");
                 rt_thread_mdelay(t);
-                uart_putstr(USART1,"receive 5\r\n");
                            }
-
 
     }
 
@@ -160,6 +151,7 @@ int mailbox_sample(void)
      if (fla)
           {rt_mb_send(&mb, (rt_uint32_t)&mb_str1);
           fla=0;
+
           }
      return RT_EOK;
  }
@@ -175,61 +167,7 @@ int mailbox_sample(void)
      }
      return ch;
  }
- /*
-void da(int i){
 
-    int k;
-    int wei1=0;
-    int wei2=0;
-    int wei3=0;
-    int j;
-    char real[ONE_DATA_MAXLEN];
-    //只有一个徽章的时候[0]位标号，  [1]徽章号，      [2]距离，         [3]报警               [4]数据处理完成标志
-          // [0][1][2][3][4]  [0][1][2][3][4]      [0][1][2][3][4]     [0][1][2][3][4]     [0][1][2][3][4]
-
-         // 1  12 1 12 1
-    //11111
-    //12 12 12 12 12
-    if(i<50){
-        for ( k = 0;  k < i; k++) {
-                if(data[k]==0x01&&data[k+1]==0x01){
-                wei1++;
-                for(j=0;k<5;k++,j++)
-                real[j]=data[k];
-                }
-                if(data[k]==0x02&&data[k+1]==0x01){
-                    wei1++;
-                   for(j=5;k<5;k++,j++)
-                   real[j]=data[k];
-                }
-                if(data[k]==0x03&&data[k+1]==0x01){
-                    wei1++;
-                                     for(j=10;k<5;k++,j++)
-                                     real[j]=data[k];
-                       }
-                if(data[k]==0x04&&data[k+1]==0x01){
-
-                       wei1++;
-                                        for(j=15;k<5;k++,j++)
-                                        real[j]=data[k];
-                       }
-                if(data[k]==0x05&&data[k+1]==0x01){
-                       wei1++;
-                       for(j=20;k<5;k++,j++)
-                          real[j]=data[k];
-                       }
-            }
-        if (wei1==5) {
-            for(j=0;j<25;j++)
-                data[j] =real[j];
-        }
-
-    }
-
-
-
-
-}*/
  /* 数据解析线程 */
  static void data_parsing(void)
  {
@@ -247,7 +185,6 @@ void da(int i){
          {
              data[i++] = '\0';
              rt_kprintf("data=%s\r\n",data);
-             //da(i);
              //uart_putstr(USART2,"data=%s\r\n",data);
              i = 0;
              continue;
