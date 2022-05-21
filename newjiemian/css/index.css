@@ -1,0 +1,215 @@
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+/* 页头 */
+.header {
+    width: 100%;
+    /*background-color: #e9e223;*/
+    color: rgb(247, 248, 247);
+    font-size: 12px;/*字体高度*/
+}
+
+.header>div {
+    width: 1500px;
+    margin: 0 auto;
+    padding: 20px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+}
+
+/* 页中 */
+.main {
+    width: 100%;
+   /* background: url('https://cdn.pixabay.com/photo/2018/08/14/13/23/ocean-3605547_1280.jpg') no-repeat;*/
+    background-size: 100% 200%;
+}
+
+.main>div {
+    /*<div> <font face="楷体" style="position: absolute;left: 200px;">距离位标最近的前3数据</font></div>*/
+    display: flex;
+    justify-content: flex-start;/*开始写的地方还有center*/
+    margin-top: 1vh;/*距离上面多元*/
+    margin-bottom: 1vh;/*距离上面多元*/
+    font-size: 2rem;/*字体高度*/
+
+}
+
+/* 页尾 */
+.footer {
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    padding: 1px;
+    font-size: 12px;
+    background-color: #21372d86;
+    color: #fff;
+    text-align: center;
+}
+.container {
+	/* 溢出隐藏 */
+	overflow: hidden;
+	/* 外边距 上下为0  左右为20px */
+	margin: 0 30px;/*左右移动的*/
+	/*background-color: #fff;*/
+	/* 盒子阴影 */
+	box-shadow: 10 10 50px rgba(140, 87, 87, 0.5);
+}
+
+.container table {
+	/* 让表格的边框合并在一起 */
+	border-collapse: collapse;
+}
+/* 在做pc端 不注释掉看不到效果 */
+.container table thead tr th {
+	color: rgb(246, 246, 246);
+	background-color: #206e41b4;
+}
+/* 还是取单数 */
+.container ta/ble thead tr th:nth-child(odd) {
+	background-color: #b7c65e;
+}
+.container table thead tr th,
+.container table tbody tr td {
+	text-align: center;
+	/* 先不加 大屏就正常了 */
+	padding: 20px 20px;
+}
+.container table tbody tr td {
+	border: 1px solid rgb(95, 90, 132);
+}
+.container table tbody  {
+	background-color: #84cc84ae;
+}
+
+
+
+.container2 {
+	/* 溢出隐藏 */
+	overflow: hidden;
+	/* 外边距 上下为0  左右为20px */
+	margin: 0 100px;/*左右移动的*/
+	/*background-color: #fff;*/
+	/* 盒子阴影 */
+	box-shadow: 10 10 50px rgba(124, 126, 163, 0.5);
+}
+
+.container2 table {
+	/* 让表格的边框合并在一起 */
+	border-collapse: collapse;
+}
+/* 在做pc端 不注释掉看不到效果 */
+.container2 table thead tr th {
+	color: rgb(246, 246, 246);
+	background-color: #206e41b4;
+}
+/* 还是取单数 */
+.container2 ta/ble thead tr th:nth-child(odd) {
+	background-color: #b7c65e;
+}
+.container2 table thead tr th,
+.container2 table tbody tr td {
+	text-align: center;
+	/* 先不加 大屏就正常了 */
+	padding: 20px 20px;
+}
+.container2 table tbody tr td {
+	border: 1px solid rgb(95, 90, 132);
+}
+.container2 table tbody  {
+	background-color: #84cc84ae;
+}
+ #container3 {width: 10%; height: 100%; overflow: hidden; margin: 0; font-family: "微软雅黑";}
+    ul li {list-style: none;}
+    .info {
+        z-index: 999;
+        width: auto;
+        min-width: 22rem;
+        padding: .75rem 1.25rem;
+        margin-left: 1.25rem;
+        position: fixed;
+        top: 1rem;
+        background-color: #206e41b4;
+        border-radius: .25rem;
+        font-size: 14px;
+        color: #666;
+        box-shadow: 0 2px 6px 0 #206e41b4;
+    }
+    .drawing-panel {
+        z-index: 999;
+        position: absolute;
+        bottom: 550px;
+        left: 630px;
+        
+        height: 40px;
+        margin-left: 3rem;
+        padding: 1rem 1rem;
+        border-radius: .25rem;
+        background-color:  #206e41b4;
+        box-shadow: 0 2px 6px 0 #206e41b4;
+    }
+    .draw-btn {
+    
+        width: 75px;
+        height: 25px;
+        
+        background-color:  #206e41b4;
+        color: #fff;;
+        border:1px solid #fff;;
+        border-radius: 5px;
+        margin: 0 5px;
+    }
+
+
+	#container3 {width: 10%; height: 100%; overflow: hidden; margin: 0; font-family: "微软雅黑";}
+    ul li {list-style: none;}
+    .info {
+        z-index: 999;
+        width: auto;
+        min-width: 22rem;
+        padding: .75rem 1.25rem;
+        margin-left: 1.25rem;
+        position: fixed;
+        top: 1rem;
+        background-color: #206e41b4;
+        border-radius: .25rem;
+        font-size: 14px;
+        color: #666;
+        box-shadow: 0 2px 6px 0 #206e41b4;
+    }
+    .drawing-panel {
+        z-index: 999;
+        position: absolute;
+        bottom: 550px;
+        left: 630px;
+        
+        height: 40px;
+        margin-left: 3rem;
+        padding: 1rem 1rem;
+        border-radius: .25rem;
+        background-color:  #206e41b4;
+        box-shadow: 0 2px 6px 0 #206e41b4;
+    }
+    .draw-btn {
+    
+        width: 75px;
+        height: 25px;
+        
+        background-color:  #206e41b4;
+        color: #fff;;
+        border:1px solid #fff;;
+        border-radius: 5px;
+        margin: 0 5px;
+    }
+	#container1{
+		position: absolute;
+		bottom: 5%;
+		left: 42%;
+		width: 57%;
+		height:70%;
+		border:2px solid rgb(14, 226, 25);
+  
+	}
