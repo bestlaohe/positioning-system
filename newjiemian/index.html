@@ -1,0 +1,771 @@
+<!DOCTYPE html >
+<html lang="zh-cmn-Hans">
+<html long="en">  
+<head> 
+<meta charset="UTF-8">
+<link rel="stylesheet" href="css/bootstrap.min.css">  <!-- 表示普通话/国语 -->
+<link rel="stylesheet" href="css/index.css">
+<!-- <script type="text/javascript" src="https://api.map.baidu.com/api?v=1.0&type=webgl&ak=tUwLuYfppre5Z2F2xaS1kATP06SaEu5Q"></script> -->
+<!-- <script type="text/javascript" src="https://api.map.baidu.com/api?v=1.0&ak=tUwLuYfppre5Z2F2xaS1kATP06SaEu5Q"></script> -->
+<!-- <script type="text/javascript" src="https://api.map.baidu.com/api?v=3.0&ak=tUwLuYfppre5Z2F2xaS1kATP06SaEu5Q"></script>-->
+
+<script type="text/javascript" src="https://api.map.baidu.com/api?v=1.0&type=webgl&ak=tUwLuYfppre5Z2F2xaS1kATP06SaEu5Q"></script>
+
+<script type="text/javascript" src="https://api.map.baidu.com/library/TrackAnimation/src/TrackAnimation_min.js"></script>
+<script type="text/javascript" src="https://mapopen.cdn.bcebos.com/github/BMapGLLib/DistanceTool/src/DistanceTool.min.js"></script>
+<script type="text/javascript" src="https://mapv.baidu.com/build/mapv.min.js"></script>
+<script type="text/javascript" src="https://code.bdstatic.com/npm/mapvgl@1.0.0-beta.146/dist/mapvgl.min.js"></script>
+<!--引入js-->
+<script  src="js/jquery-1.11.0.min.js"></script><!-- 一个官方的库-->
+<script  src="js/highcharts.js"></script>  <!-- 界面-->
+<script  src="js/WSN/WSNRTConnect.js"></script><!-- 实时数据-->
+<script  src="js/script.js"></script><!-- 逻辑-->
+
+<meta name="viewport" content="initial-scale=1.0" />  
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />  
+
+<title>室内人员定位系统</title>
+</head>
+<style>
+  body { padding: 0; margin: 0; height: 100%; font-size: 16px; background-repeat: no-repeat; background-position: left top;
+     background-color: #242645; color: #fff;  font-family: 'Source Sans Pro'; background-size: 100%;
+      background-image: url(./images/Starry2.jpg);
+    }
+</style>
+
+<style type="text/css">  
+  #container1{
+      position: absolute;
+      bottom: 5%;
+      left: 42%;
+      width: 57%;
+      height:70%;
+      border:2px solid rgb(14, 226, 25);
+
+  }
+ 
+  </style>  
+  <style type="text/css">
+    #container3 {width: 10%; height: 100%; overflow: hidden; margin: 0; font-family: "微软雅黑";}
+    ul li {list-style: none;}
+    .info {
+        z-index: 999;
+        width: auto;
+        min-width: 22rem;
+        padding: .75rem 1.25rem;
+        margin-left: 1.25rem;
+        position: fixed;
+        top: 1rem;
+        background-color: #206e41b4;
+        border-radius: .25rem;
+        font-size: 14px;
+        color: #666;
+        box-shadow: 0 2px 6px 0 #206e41b4;
+    }
+    .drawing-panel {
+        z-index: 999;
+        position: absolute;
+        bottom: 550px;
+        left: 630px;
+        
+        height: 40px;
+        margin-left: 3rem;
+        padding: 1rem 1rem;
+        border-radius: .25rem;
+        background-color:  #206e41b4;
+        box-shadow: 0 2px 6px 0 #206e41b4;
+    }
+    .draw-btn {
+    
+        width: 75px;
+        height: 25px;
+        
+        background-color:  #206e41b4;
+        color: #fff;;
+        border:1px solid #fff;;
+        border-radius: 5px;
+        margin: 0 5px;
+    }
+  </style>
+  <body >
+ 
+
+  <!-- 页头 -->
+  <div class="header">
+                  <div>
+                        <div>
+                          <h1>室内人员定位系统</h1>
+                          <div id="ConnectState">数据服务连接中...</div>
+                        </div>
+                        
+                    
+                  </div>
+  </div>
+
+  <div class="main">
+    <div> <font face="楷体" style="position: absolute;  font-size: 2rem; top: 100px;   left: 300px; background: #0c270100;
+      color: #ffffffed;">所有位标数据</font></div>
+  </div>
+  <div class="container">
+    <table>
+      <thead>
+        <tr>
+          <th>徽章/位标</th>
+          <th>位标1</th>
+          <th>位标2</th>
+          <th>位标3</th>
+          <th>位标4</th>
+          <th>位标5</th>
+          <th>报警</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>徽章1</td>
+          <td><div id="d11">--米</td>
+          <td><div id="d21">--米</td>
+          <td><div id="d31">--米</td>
+          <td><div id="d41">--米</td>
+          <td><div id="d51">--米</td>
+          <td><div id="a1">安全</td>
+        </tr>
+        <tr>
+          <td>徽章2</td>
+          <td><div id="d12">--米</td>
+          <td><div id="d22">--米</td>
+          <td><div id="d32">--米</td>
+          <td><div id="d42">--米</td>
+          <td><div id="d52">--米</td>
+          <td><div id="a2">安全</td>
+        </tr>
+        <tr>
+          <td>徽章3</td>
+          <td><div id="d13">--米</td>
+          <td><div id="d23">--米</td>
+          <td><div id="d33">--米</td>
+          <td><div id="d43">--米</td>
+          <td><div id="d53">--米</td>
+            <td><div id="a3">安全</td>
+
+        </tr>
+       
+        
+      </tbody>
+    </table>
+  </div>
+  
+  <div class="main">
+    <div> <font face="楷体" style="position: sticky;  left: 230px;  background-size: 2000px 20000px;
+      background: #0a0c0900;
+      color: #fafafaed;">距离位标最近的前3数据</font></div> 
+  </div>
+  <div class="container2">
+    <table>
+      <thead>
+        <tr>
+          <th>位标</th>
+          <th>徽章1</th>
+          <th>位标</th>
+          <th>徽章2</th>
+          <th>位标</th>
+          <th>徽章3</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><div id="w11"></td> <!-- 表示第一行位标1的 -->
+          <td><div id="md11">--米</td><!-- 表示第一行徽章1的 -->
+          <td><div id="w12"></td> <!-- 表示第一行位标2的 -->
+          <td><div id="md12">--米</td><!-- 表示第一行徽章2的 -->
+          <td><div id="w13"></td> <!-- 表示第一行位标3的 -->
+          <td><div id="md13">--米</td><!-- 表示第一行徽章3的 -->
+        </tr>
+        <tr>
+          <td><div id="w21"></td><!-- 表示第二行位标1的 -->
+          <td><div id="md21">--米</td><!-- 表示第二行徽章1的 -->
+          <td><div id="w22"></td> <!-- 表示第二行 位标2的-->
+          <td><div id="md22">--米</td>
+          <td><div id="w23"></td> <!-- 表示第二行 位标3的-->
+          <td><div id="md23">--米</td>
+        </tr>
+        <tr>
+          <td><div id="w31"></td><!-- 表示第三行位标1的 -->
+          <td><div id="md31">--米</td>
+          <td><div id="w32"></td> <!-- 表示第三行位标2的 -->
+          <td><div id="md32">--米</td>
+          <td><div id="w33"></td> <!-- 表示第三行位标3的 -->
+          <td><div id="md33">--米</td>
+        </tr> 
+      </tbody>
+    </table>
+  </div>
+
+  <div> <font face="楷体" style="position: absolute;  font-size: 2rem; top: 18%;   left: 68%;  background: #0a0c0900;
+    color: #fefefeed;">定位图示</font></div>
+    <ul class = "drawing-panel">
+      <input type="button" class="draw-btn" value="开启测距" onclick="myDis.open()">
+      <input type="button" class="draw-btn" value="关闭测距" onclick="myDis.close()">
+    </ul>
+
+  <!-- 页中 -->
+  <div id="container1"> </div><div >
+  
+  
+    <script>
+
+      
+    //初始化变量
+    {
+      //初始化坐标
+      var xh1=118.096337;
+      var yh1=24.629863;
+
+      var xh2=118.096319;
+      var yh2=24.629781;
+      
+      var xh3=118.096337;
+      var yh3=24.629691;
+        //经度维度
+      //左右变化改经度，以主席台的宽为10m
+      //经度与米的精确度
+    /*  var accuracylng=0.000100/10;
+      //上下以主席台的长为30md
+      //纬度与米的精确度
+      var accuracylat=0.000264/30;
+      //定位图标的x轴校准
+      var accuracxpicture=0.000018;
+      //定位图标的y轴校准
+      var accuracypicture=0.000017;
+    */
+      var accuracylng=0.000094273/10;
+      //定位图标的校准
+      var accuracxpicture=0.000007;
+      
+      //上下以主席台的长为30m
+      //纬度与米的精确度
+      var accuracylat=0.00001061/30;
+      //定位图标的校准
+      var accuracypicture=0.0000175;
+
+
+
+      var accuracd=Math.sqrt(accuracylng*accuracylng+accuracylat*accuracylat);
+      var accuracp=Math.sqrt(accuracylng*accuracylng+accuracylat*accuracylat);
+      // n.x=118.096490-accuracp;
+      // n.y=24.630266-accuracp;
+
+     // var w =[118.096490,24.630266, 118.097120,24.630315, 118.096850,24.629780,118.096562,24.629256,118.09719,24.629310]
+      var w =[ 118.096650,24.629980, 118.097030,24.6300100, 118.096850,24.629780,118.096681,24.629531,118.097065,24.629561]
+     
+
+    }
+    // 三点定位函数，分别传入 参考点a、b、c的x、y坐标、待测点与参考点a的距离
+    function threePointLocation(ax, ay, ad, bx, by, bd, cx, cy, cd)
+    {
+      /*
+        说明：参考的三点坐标及距离位置点的距离。
+        不适用情况：三个参考点连成的三角形其两边（直角三角形的直角边）不能平行于xy坐标轴，例如p1(0,0),p2(3,0),p3(0,4),交点(3,4)
+        测试数据：p1(0,0),p2(3,4),p3(6,0),交点(6,8)
+      */
+      //var ref_x = [0, 3, 6];
+      //var ref_y = [0, 4, 0];
+      //var ref_d = [4, 3, 4];
+      var ref_x = [];
+      var ref_y = [];
+      var ref_d = [];
+      // 计算出的三组 (d[i]方-d[j]方-x[i]方+y[j]方+x[j]方-y[i]方)/(2*(x[j]-x[i]))
+      var dxyx = [];
+      // 计算出的三组 (d[i]方-d[j]方-x[i]方+y[j]方+x[j]方-y[i]方)/(2*(y[j]-y[i]))
+      var dxyy = [];
+      // 计算出的三组 (x[i]-x[j])/(y[i]-y[j])
+      var x_divide_y = [];
+      // 计算出的三组 (y[i]-y[j])/(x[i]-x[j])
+      var y_divide_x = [];
+      // 计算出的三组x y坐标
+      var temp_x = [], temp_y = [];
+      // 平均x y坐标
+      var x = 0, y = 0;
+      var i = 0, j = 0, k = 0;
+      // 存储交点p坐标
+      var p = JSON.parse("{\"x\": 0, \"y\": 0}");
+    
+      // 初始化数据
+      ref_x.push(ax, bx, cx);
+      ref_y.push(ay, by, cy);
+      ref_d.push(ad, bd, cd);
+
+
+      for(i = 0; i < 3; i++)
+      {
+        //console.log("p[" + i +"](" + ref_x[i] + ", " + ref_y[i] + "), dis=" + ref_d[i] + "\n");
+
+        j = (i + 1) > 2 ? 2 : (i + 1);
+        k = k > 1 ? 0 : k;
+        
+        //console.log("numerator:" + (ref_d[k] * ref_d[k] - ref_d[j] * ref_d[j] - ref_x[k] * ref_x[k] + ref_y[j] * ref_y[j] + ref_x[j] * ref_x[j] - ref_y[k] * ref_y[k]));
+        if(ref_x[j] - ref_x[k] != 0) 
+          dxyx[i] = (ref_d[k] * ref_d[k] - ref_d[j] * ref_d[j] - ref_x[k] * ref_x[k] + ref_y[j] * ref_y[j] + ref_x[j] * ref_x[j] - ref_y[k] * ref_y[k]) / 2 /(ref_x[j] - ref_x[k]);
+        else
+          dxyx[i] = 0;
+
+        if(ref_y[j] - ref_y[k] != 0) 
+          dxyy[i] = (ref_d[k] * ref_d[k] - ref_d[j] * ref_d[j] - ref_x[k] * ref_x[k] + ref_y[j] * ref_y[j] + ref_x[j] * ref_x[j] - ref_y[k] * ref_y[k]) / 2 /(ref_y[j] - ref_y[k]);
+        else
+          dxyy[i] = 0;
+
+        if(ref_y[j] - ref_y[k] != 0)
+          x_divide_y[i] = (ref_x[j] - ref_x[k]) / (ref_y[j] - ref_y[k]);
+        else
+          x_divide_y[i] = 0;
+
+        if(ref_x[j] - ref_x[k] != 0)
+          y_divide_x[i] = (ref_y[j] - ref_y[k]) / (ref_x[j] - ref_x[k]);
+        else
+          y_divide_x[i] = 0; 
+        //console.log("dxyx[" + i + "]:" + dxyx[i] + ", dxyy[" + i + "]:" + dxyy[i]);
+        //console.log("x_divide_y[" + i + "]:" + x_divide_y[i] + ", y_divide_x[" + i + "]:" + y_divide_x[i]);
+        k++;
+      }
+      j = 0;
+      k = 0;
+      for(i = 0; i < 3; i++)
+      {
+        j = (i + 1) > 2 ? 2 : (i + 1);
+        k = k > 1 ? 0 : k;
+        if(x_divide_y[k] - x_divide_y[j] != 0)
+        {
+          temp_x[i] = (dxyy[k] - dxyy[j]) / (x_divide_y[k] - x_divide_y[j]);
+          temp_y[i] = (dxyx[k] - dxyx[j]) / (y_divide_x[k] - y_divide_x[j]);
+        }
+        else
+        {
+          temp_x[i] = 0;
+          temp_y[i] = 0;
+        }
+      }
+
+
+      x = (temp_x[0] + temp_x[1] + temp_x[2]) / 3;
+      y = (temp_y[0] + temp_y[1] + temp_y[2]) / 3;
+
+      // console.log("\n[ x:" + x + ", y:" + y + " ]\n"); 
+      
+      p.x = x;
+      p.y = y;
+  
+    // p.x = 10;
+    // p.y = 55;
+
+      return p;
+    }
+
+
+
+    //window.alert('hello javaScript')
+    //模拟数据
+    /*
+    $("#d13").val(30);
+    $("#d23").val(50);
+    $("#d33").val(36);
+    $("#w13").text( "位标"+3 );
+    $("#w23").text( "位标"+4 );
+    $("#w33").text( "位标"+5 );
+
+    //$("#a1").text('危险');
+    */
+
+
+    var map = new BMapGL.Map("container1");          // 创建地图实例 
+    var point = new BMapGL.Point(118.096822,24.629797);  // 创建点坐标 
+    map.centerAndZoom(point, 21);                 // 初始化地图，设置中心点坐标和地图级别
+    map.enableScrollWheelZoom(true);     //开启鼠标滚轮缩放
+    map.setHeading(94);   //设置地图旋转角度
+    // map.setTilt(73);       //设置地图的倾斜角度
+
+    /*尺度功能*/
+    var opts = {offset: new BMapGL.Size(70, 5)}
+    // 添加控件
+    map.addControl(new BMapGL.ScaleControl(opts));
+    //地图类型
+    map.setMapStyleV2({styleId: '654e0f7d16226c930c977f33fbf09925'});
+    /*测距功能*/
+    { var myDis = new BMapGLLib.DistanceTool(map);
+      // 监听测距过程中的鼠标事件
+      myDis.addEventListener('drawend', function(e) {
+          console.log("drawend");
+          console.log(e.points);
+          console.log(e.overlays);
+          console.log(e.distance);
+      });
+      myDis.addEventListener("addpoint", function(e) {
+          console.log("addpoint");
+          console.log(e.point);
+          console.log(e.pixel);
+          console.log(e.index);
+          console.log(e.distance);
+      });
+      myDis.addEventListener("removepolyline", function(e) {
+          console.log("removepolyline");
+          console.log(e);
+      });}  
+
+
+    //循环更新数据
+    function qqqq()
+    {
+     
+      // console.log("w11内容是");
+        
+        //数据处理更新
+        
+          map.clearOverlays();
+
+
+          if($("#d11").val()!=null)//有定义
+            {
+            
+                //console.log("w内容是");
+              //window.alert('hello h1');
+              var disten1 = $("#d11").val()*accuracd-accuracp;
+              var disten2 = $("#d21").val()*accuracd-accuracp;
+              var disten3 = $("#d31").val()*accuracd-accuracp;
+          
+              var num1 = $("#w11").text().replace(/[^\d]/g,' ')-1;//提取位标数字
+              var num2 = $("#w21").text().replace(/[^\d]/g,' ')-1;//提取位标数字
+              var num3 = $("#w31").text().replace(/[^\d]/g,' ')-1;//提取位标数字
+          
+              var n=threePointLocation(w[num1*2],w[num1*2+1],disten1,w[num2*2],w[num2*2+1],disten2,w[num3*2],w[num3*2+1],disten3);
+              xh1=n.x;
+              yh1=n.y;
+              // console.log("x坐标是%f",n.x);
+              //console.log("y距离是%f",n.y);
+            }
+      
+          if($("#d12").val()!=null)//有定义
+            {
+        
+                //window.alert('hello h2');
+                var disten1 = $("#d12").val()*accuracd-accuracp;
+                var disten2 = $("#d22").val()*accuracd-accuracp;
+                var disten3 = $("#d32").val()*accuracd-accuracp;
+            
+                var num1 = $("#w12").text().replace(/[^\d]/g,' ')-1;//提取位标数字
+                var num2 = $("#w22").text().replace(/[^\d]/g,' ')-1;//提取位标数字
+                var num3 = $("#w32").text().replace(/[^\d]/g,' ')-1;//提取位标数字
+            
+                var n=threePointLocation(w[num1*2],w[num1*2+1],disten1,w[num2*2],w[num2*2+1],disten2,w[num3*2],w[num3*2+1],disten3);
+                xh2=n.x;
+                yh2=n.y;
+            }
+      
+          if($("#d13").val()!=null)//有定义
+              {
+          
+                  //window.alert('hello h3');
+                  var disten1 = $("#d13").val()*accuracd-accuracp;
+                  var disten2 = $("#d23").val()*accuracd-accuracp;
+                  var disten3 = $("#d33").val()*accuracd-accuracp;
+              
+                  var num1 = $("#w13").text().replace(/[^\d]/g,' ')-1;//提取位标数字
+                  var num2 = $("#w23").text().replace(/[^\d]/g,' ')-1;//提取位标数字
+                  var num3 = $("#w33").text().replace(/[^\d]/g,' ')-1;//提取位标数字
+              
+                  var n=threePointLocation(w[num1*2],w[num1*2+1],disten1,w[num2*2],w[num2*2+1],disten2,w[num3*2],w[num3*2+1],disten3);
+                  xh3=n.x;
+                  yh3=n.y;
+              }
+              
+          if($("#a1").text()=="危险"){window.alert('徽章1正在发出警报');}
+          if($("#a2").text()=="危险"){window.alert('徽章2正在发出警报');}
+          if($("#a3").text()=="危险"){window.alert('徽章3正在发出警报');}
+          
+
+
+          
+        
+
+      //显示人员的代码
+     var myicon = new BMapGL.Icon('http://webmap0.map.bdstatic.com/wolfman/static/common/images/us_cursor_9517a2b.png', // 百度图片　　
+      new BMapGL.Size(18,27), // 视窗大小　　　左右 上下　　
+      {imageSize: new BMapGL.Size(144,92), // 引用图片实际大小　　　　
+        imageOffset:new BMapGL.Size(-0.42,22)  // 图片相对视窗的偏移左右 上下　　　　　　
+        } );
+      
+      var pth1 = new BMapGL.Point(xh1,yh1);
+      var markerh1 = new BMapGL.Marker(pth1,{icon:myicon});
+      map.addOverlay(markerh1);  
+      //监听事件
+      markerh1.addEventListener("click", function(){alert("这是人员1"); });
+
+
+
+      var myicon = new BMapGL.Icon('http://webmap0.map.bdstatic.com/wolfman/static/common/images/us_cursor_9517a2b.png', // 百度图片　　
+      new BMapGL.Size(18,27), // 视窗大小　　　左右 上下　　
+      {imageSize: new BMapGL.Size(144,92), // 引用图片实际大小　　　　
+        imageOffset:new BMapGL.Size(35.68,21.8)  // 图片相对视窗的偏移左右 上下　　　　　　
+        });
+      var pth2 = new BMapGL.Point(xh2,yh2);
+      var markerh2 = new BMapGL.Marker(pth2,{icon:myicon});
+      map.addOverlay(markerh2);    
+      //监听事件
+      markerh2.addEventListener("click", function(){alert("这是人员2"); });
+
+
+      var myicon = new BMapGL.Icon('http://webmap0.map.bdstatic.com/wolfman/static/common/images/us_cursor_9517a2b.png', // 百度图片　　
+      new BMapGL.Size(18,27), // 视窗大小　　　左右 上下　　
+      {imageSize: new BMapGL.Size(144,92), // 引用图片实际大小　　　　
+        imageOffset:new BMapGL.Size(53.68,22)  // 图片相对视窗的偏移左右 上下　　　　　　
+        });
+      var pth3 = new BMapGL.Point(xh3,yh3);
+      var markerh3 = new BMapGL.Marker(pth3,{icon:myicon});
+      map.addOverlay(markerh3);   
+      //监听事件
+      markerh3.addEventListener("click", function(){alert("这是人员3"); });
+
+      
+      
+   
+      
+      //显示位标的代码
+      var myicon = new BMapGL.Icon('http://webmap0.map.bdstatic.com/wolfman/static/common/images/us_cursor_9517a2b.png', // 百度图片　　
+      new BMapGL.Size(16,30), // 视窗大小　　　左右 上下　　
+      {imageSize: new BMapGL.Size(144,98), // 引用图片实际大小　　　　
+        imageOffset:new BMapGL.Size(-0.3,49)  // 图片相对视窗的偏移左右 上下　　　　　　
+        } );
+    
+      var pt = new BMapGL.Point(w[0],w[1]);
+        var marker = new BMapGL.Marker(pt,{icon:myicon});
+      map.addOverlay(marker);   
+        //监听事件
+        marker.addEventListener("click", function(){    
+          alert("这是位标1"); });
+
+      var myicon = new BMapGL.Icon('http://webmap0.map.bdstatic.com/wolfman/static/common/images/us_cursor_9517a2b.png', // 百度图片　　
+      new BMapGL.Size(15.7,30), // 视窗大小　　　左右 上下　　
+      {imageSize: new BMapGL.Size(144,92), // 引用图片实际大小　　　　
+        imageOffset:new BMapGL.Size(16.2,49)  // 图片相对视窗的偏移左右 上下　　　　　　
+        } );
+      
+      var pt = new BMapGL.Point(w[2],w[3]);
+        var marker = new BMapGL.Marker(pt,{icon:myicon});
+      map.addOverlay(marker);   
+        //监听事件
+      marker.addEventListener("click", function(){    
+      alert("这是位标2"); });
+
+      var myicon = new BMapGL.Icon('http://webmap0.map.bdstatic.com/wolfman/static/common/images/us_cursor_9517a2b.png', // 百度图片　　
+      new BMapGL.Size(15.7,30), // 视窗大小　　　左右 上下　　
+      {imageSize: new BMapGL.Size(144,92), // 引用图片实际大小　　　　
+        imageOffset:new BMapGL.Size(32.2,49)  // 图片相对视窗的偏移左右 上下　　　　　　
+        } );
+      var pt = new BMapGL.Point(w[4],w[5]);
+      var marker = new BMapGL.Marker(pt,{icon:myicon});
+      map.addOverlay(marker);   
+      //监听事件
+      marker.addEventListener("click", function(){    
+      alert("这是位标3"); });
+
+      var myicon = new BMapGL.Icon('http://webmap0.map.bdstatic.com/wolfman/static/common/images/us_cursor_9517a2b.png', // 百度图片　　
+      new BMapGL.Size(15.7,30), // 视窗大小　　　左右 上下　　
+      {imageSize: new BMapGL.Size(144,92), // 引用图片实际大小　　　　
+        imageOffset:new BMapGL.Size(48.2,49)  // 图片相对视窗的偏移左右 上下　　　　　　
+        } );
+
+      var pt = new BMapGL.Point(w[6],w[7]);
+          var marker = new BMapGL.Marker(pt,{icon:myicon});
+      map.addOverlay(marker);   
+        //监听事件
+        marker.addEventListener("click", function(){    
+          alert("这是位标4"); });
+
+      var myicon = new BMapGL.Icon('http://webmap0.map.bdstatic.com/wolfman/static/common/images/us_cursor_9517a2b.png', // 百度图片　　
+      new BMapGL.Size(15.5,30), // 视窗大小　　　左右 上下　　
+      {imageSize: new BMapGL.Size(144,92), // 引用图片实际大小　　　　
+        imageOffset:new BMapGL.Size(64.2,49)  // 图片相对视窗的偏移左右 上下　　　　　　
+        } );
+
+      var pt = new BMapGL.Point(w[8],w[9]);
+        var marker = new BMapGL.Marker(pt,{icon:myicon});
+      map.addOverlay(marker);   
+        //监听事件
+        marker.addEventListener("click", function(){    
+          alert("这是位标5"); });
+      
+
+    }
+   // qqqq();
+  setInterval("qqqq();", 200);
+
+/*
+ //显示位标的代码
+    {  var myicon = new BMapGL.Icon('http://webmap0.map.bdstatic.com/wolfman/static/common/images/us_cursor_9517a2b.png', // 百度图片　　
+    new BMapGL.Size(16,30), // 视窗大小　　　左右 上下　　
+    {imageSize: new BMapGL.Size(144,98), // 引用图片实际大小　　　　
+      imageOffset:new BMapGL.Size(-0.3,49)  // 图片相对视窗的偏移左右 上下　　　　　　
+      } );
+   
+    var pt = new BMapGL.Point(118.096490,24.630266);
+      var marker = new BMapGL.Marker(pt,{icon:myicon});
+    map.addOverlay(marker);   
+      //监听事件
+      markerh1.addEventListener("click", function(){alert("这是人员1"); });
+      var myicon = new BMapGL.Icon('http://webmap0.map.bdstatic.com/wolfman/static/common/images/us_cursor_9517a2b.png', // 百度图片　　
+      new BMapGL.Size(18.35,27), // 视窗大小　　　左右 上下　　
+      {imageSize: new BMapGL.Size(144,92), // 引用图片实际大小　　　　
+        imageOffset:new BMapGL.Size(35.68,21.8)  // 图片相对视窗的偏移左右 上下　　　　　　
+        });
+      var pth2 = new BMapGL.Point(xh2,yh2);
+      var markerh2 = new BMapGL.Marker(pth2,{icon:myicon});
+      map.addOverlay(markerh2);  
+       
+    
+      //监听事件
+      markerh2.addEventListener("click", function(){alert("这是人员2"); });
+      var myicon = new BMapGL.Icon('http://webmap0.map.bdstatic.com/wolfman/static/common/images/us_cursor_9517a2b.png', // 百度图片　　
+      new BMapGL.Size(18.35,27), // 视窗大小　　　左右 上下　　
+      {imageSize: new BMapGL.Size(144,92), // 引用图片实际大小　　　　
+        imageOffset:new BMapGL.Size(53.68,22)  // 图片相对视窗的偏移左右 上下　　　　　　
+        });
+      var pth3 = new BMapGL.Point(xh3,yh3);
+      var markerh3 = new BMapGL.Marker(pth3,{icon:myicon});
+      map.addOverlay(markerh3);   
+      //监听事件
+      markerh3.addEventListener("click", function(){alert("这是人员3"); });
+
+      }
+
+  //位标1到5
+  var xa=118.096490;var ya=24.630266;
+
+  var xb=118.097120;var yb=24.630315;
+
+  var xc=118.096850;var yc=24.629780;
+
+  var xd=118.096562;var yd=24.629256;
+  
+  var xe=118.097190;var ye=24.629310;
+
+   console.log("x坐标是%f",n.x);
+    console.log("y距离是%f",n.y);
+
+var xa=100;var ya=100;
+var xb=200;var yb=100;
+var xc=150;var yc=150;
+
+
+var disten1 = $("#d11").val();
+var disten2 = $("#d21").val();
+var disten3 = $("#d31").val();
+
+console.log("距离1是%d",disten1);
+console.log("距离2是%d",disten2);
+console.log("距离3是%d",disten3);
+    <td><div id="md11">--米</td>
+      <td><div id="md21">--米</td>
+      <td><div id="md31">--米</td>
+
+925-670
+250
+380-272
+108
+0.0001
+右上角
+118.09638,24.629 925
+右下角
+118.09638,24.629 670
+主席台的30米
+左上角
+118.096 272,24.629925
+118.096 380,24.629 925
+
+118.096490,24.630266
+与位标1维度差10米
+
+<td><div id="md11">--米</td>
+<td><div id="md21">--米</td>
+<td><div id="md31">--米</td>
+  
+传入一个坐标
+   通过md11改变这个值(xh1,yh1) ;
+距离md11,md21,md31
+xh1=
+yh1=
+w11-'位标'
+id="w11"
+
+var disten=10;
+console.log("距离是%d",disten);
+
+
+
+
+//右上加，左下减
+//经度
+var xh1=118.096490-accuracxpicture+accuracylng*disten;//右加左减少经度的左右变化换算+accuracylng*disten
+//纬度
+var yh1=24.630266-accuracypicture+(0.00001*(disten/10));//上加下减加维度的上下变化换算
+
+var xh2=118.096490-accuracxpicture+(0.00001*(disten/20));;
+var yh2=24.630266-accuracypicture-accuracylat*disten;//
+
+
+
+// ;
+*/
+
+/*
+        var path = [
+       {
+        'lng': 118.096490,
+        'lat': 24.630266
+      }, 
+      {
+        'lng':118.097120,
+        'lat': 24.630315
+      }, 
+      {
+        'lng':118.096850,
+        'lat':24.629780
+      }, 
+      {
+        'lng': 118.096562,
+        'lat': 24.629256
+      }, 
+      {
+        'lng': 118.09719,
+        'lat': 24.629310
+      },
+      {
+        'lng': 118.096490,
+        'lat': 24.630266
+      }
+      ];
+      var point = [];
+    for (var i = 0; i < path.length; i++) {
+        point.push(new BMapGL.Point(path[i].lng, path[i].lat));
+    }
+    var pl = new BMapGL.Polyline(point);
+    setTimeout('start()', 3000);
+    function start () {
+      var trackAni = new BMapGLLib.TrackAnimation(map, pl, {
+        overallView:true, // 动画完成后自动调整视野到总览null
+        tilt: 30,          // 轨迹播放的角度，默认为55
+        duration: 10000,   // 动画持续时长，默认为10000，单位ms
+        delay: 300        // 动画开始的延迟，默认0，单位ms
+    });
+        trackAni.start();
+    }
+
+ 
+*/
+
+
+    </script>
+</div>
+
+
+  </div>
+  <!-- 页尾 -->
+  <div class="footer">苦果室内定位</div>
+</body>
+</html>
