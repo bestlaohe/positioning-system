@@ -1,0 +1,779 @@
+<!DOCTYPE html >
+<html lang="zh-cmn-Hans">
+<html long="en">  
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="css/bootstrap.min.css">  <!-- width=0 height=0表示普通话/国语  hidden="true"-->
+<link rel="stylesheet" href="css/index.css">
+
+
+    
+
+<!--引入js-->
+<script  src="js/jquery-1.11.0.min.js"></script><!-- 一个官方的库-->
+<script  src="js/highcharts.js"></script>  <!-- 界面-->
+<script  src="js/WSN/WSNRTConnect.js"></script><!-- 实时数据-->
+<script  src="js/script.js"></script><!-- 逻辑-->
+
+<!--引入魔方-->
+<link rel="stylesheet" type="text/css" href="styles/cube.css">
+<link rel="stylesheet" type="text/css" href="styles/doodle2.css">
+<link rel="stylesheet" type="text/css" href="styles/certificate2.css">
+<script charset="utf-8" src="js/tween.r12.js"></script>
+<script charset="utf-8" src="js/three.js"></script>
+<script charset="utf-8" src="js/cuber.min.js"></script>
+
+
+<meta name="viewport" content="initial-scale=1.0" />  
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />  
+
+<title>室内人员定位系统</title>
+
+</head>
+<style>
+  body { padding: 0; margin: 0; height: 100%; font-size: 16px; background-repeat: no-repeat; background-position: left top;
+     background-color: #ffffff; color: #fff;  font-family: 'Source Sans Pro'; background-size: 100%;
+      background-image: url(./images/bj.jpeg);
+    }
+  #cvs{
+      background-color: #ffffff;
+      background-image: url(./images/二代房子.png);
+      background-size:cover;
+      position: absolute;
+      bottom: 5%;
+      left: 55%;
+      border: 5px dashed #00337bd7;display: block;  
+  }
+</style>
+
+<style type="text/css">  
+  #map{
+      position: absolute;
+      bottom: 5%;
+      left: 42%;
+      width: 57%;
+      height:70%;
+      border:2px solid rgb(3, 66, 3);
+  }
+ 
+  </style>  
+  <style type="text/css">
+
+    #bottom {width: 10%; height: 100%; overflow: hidden; margin: 0; font-family: "微软雅黑";}
+    ul li {list-style: none;}
+    .info {
+        z-index: 999;
+        width: auto;
+        min-width: 22rem;
+        padding: .75rem 1.25rem;
+        margin-left: 1.25rem;
+        position: fixed;
+        top: 1rem;
+        background-color: #f3f3f3;
+        border-radius: .25rem;
+        font-size: 14px;
+        color: rgb(250, 250, 250);
+        box-shadow: 0 2px 6px 0 #f9f9f9;
+    }
+    .drawing-panel {
+        z-index: 999;
+        position: absolute;
+        bottom: 500px;
+        left: 630px;
+        
+        height: 40px;
+        margin-left: 3rem;
+        padding: 1rem 1rem;
+        border-radius: .25rem;
+        background-color:  #51634f9e;
+        box-shadow: 0 2px 6px 0 #054f1455;
+    }
+    .draw-btn {
+    
+        width: 75px;
+        height: 25px;
+        background-color:  #51634f9e;
+        color: #fff;;
+        border:1px solid rgb(255, 255, 255);;
+        border-radius: 5px;
+        margin: 0 5px;
+    }
+  </style>
+  <style type="text/css">
+    *{
+     padding: 0;
+     margin: 0;
+   }
+   html,body{
+     height: 100%;
+   }
+   body{
+     overflow: hidden;
+     
+   }
+   .snowfall-flakes:before,.snowfall-flakes:after{
+      content: '';
+      position: absolute;
+      width: 10px;
+      height: 16px;
+      border-radius: 10px 10px 20px 20px;
+      background-color: rgba(206, 240, 12, 0.655);
+      
+    }
+     
+     </style>
+  <body >
+    <div class="login">
+      <!-- 粒子特效 -->
+    
+    <!-- <script type="text/javascript" src="js/jquery.min.js"></script>
+    <script type="text/javascript" src="js/Particleground.js"></script>
+    <script type="text/javascript" src="Js/Treatment.js"></script>
+    <script type="text/javascript"> -->
+      <!-- 粒子背景特效-->
+      <!-- $('body').particleground({
+          dotColor: '#E8DFE8',
+          lineColor: '#189a099e'
+      }); 
+    </script> -->
+
+    <canvas id="cvs" width="500" height="500"  > </canvas>
+    <!-- 魔方 -->
+      
+ <!-- <div id="container"></div>
+ <div id="fail">
+   <div id="upgradeText" class="bubble fadeTransition">
+   <div class="upgradetext">To play, please use a supported hardware configuration and the latest version of one of these browsers:</div>
+   <br>
+   <a class="upgradetext" href="https://www.google.com/chrome/browser/" target="_blank">Chrome</a><br>
+   <a class="upgradetext" href="https://www.mozilla.org/firefox" target="_blank">Firefox</a><br>
+   <a class="upgradetext" href="https://www.apple.com/safari" target="_blank">Safari</a><br>
+   <span class="pointerleft SPRITE_carrot_down_2x"></span>
+   </div>
+ </div>
+ <div id="uipanel" class="fadeTransition" style="display:none">
+   <div id="movecounter">0</div>
+   <div id="buttonpanel">
+   <div id="sharebubble" class="fadeTransition" style="opacity:0">
+     <input id="shareshortlink" type="text" value="google.com/doodles" readonly/>
+     <div id="sharegplus" class="bubbleicon SPRITE_google_plus_64_2x"></div>
+     <div id="sharefacebook" class="bubbleicon SPRITE_facebook_64_2x"></div>
+     <div id="sharetwitter" class="bubbleicon SPRITE_twitter_64_2x"></div>
+     <div id="shareemail" class="bubbleicon SPRITE_email_64_2x"></div>
+   </div>
+   <div id="uibuttons">
+     <div id="sharebutton" class="bubbleicon SPRITE_share_64_2x"></div>
+     <div id="helpbutton" class="bubbleicon SPRITE_help_64_2x"></div>
+     <div id="searchbutton" class="bubbleicon SPRITE_search_64_2x"></div>
+   </div>
+   </div>
+   <div id="helpbubble" class="bubble" style="display:none">
+   <span class="pointerup SPRITE_carrot_grey_up_2x"></span>
+   <div id="helpimage" class="one"></div>
+   <div id="helptext" class="helptext"></div>
+   <div id="helpnext" class="helptext"></div>
+   <span class="pointerdown SPRITE_carrot_down_2x"></span><br>
+   </div>
+ </div>
+ <script charset="utf-8" src="js/iecss3d.js"></script>
+ <script charset="utf-8" src="js/ierenderer.js"></script>
+ <script charset="utf-8" src="js/deviceMotion.js"></script>
+ <script charset="utf-8" src="js/locked.js"></script>
+
+ <script charset="utf-8" src="js/textBox.js"></script>
+ <script charset="utf-8" src="js/ResizeableTextBox.3.js"></script>
+ <script charset="utf-8" src="js/divBox.js"></script>
+ <script charset="utf-8" src="js/frames.js"></script>
+ <script charset="utf-8" src="js/certificate.js"></script>
+ <script charset="utf-8" src="js/main3.js"></script> -->
+
+ 
+  <!-- 树叶飘落背景 -->
+  <!-- <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://cdn.bootcss.com/JQuery-Snowfall/1.7.4/snowfall.jquery.min.js"></script>
+  <script type="text/javascript">
+    $(document).snowfall({flakeCount : 50, maxSpeed: 10, minSpeed: 1});
+  </script> -->
+  
+  
+
+  <!-- 页头 -->
+  <div class="header">
+                  <div>
+                        <div>
+                          <div>
+                            <h1 align="center"font face="华文琥珀" style=" color: #173b6aed; font-size:40px" >室内人员定位系统</h1>
+                            <div id="ConnectState" font face="华文琥珀" style=" color: #173b6aed; font-size:10px;top:110px;left:315px">数据服务连接中...</div>
+                          </div>
+                        </div>
+                  </div>
+  </div>
+
+  
+  <div class="main">
+    <div> <font face="华文琥珀" style="position: absolute;  font-size: 2.5rem; top: 110px;   left: 310px; background: #0c270100;
+      color: #173b6aed;">所有位标数据</font></div>
+  </div>
+  <div class="container">
+    <table>
+      <thead>
+        <tr>
+          <th>徽章/位标</th>
+          <th>位标1</th>
+          <th>位标2</th>
+          <th>位标3</th>
+          <th>位标4</th>
+          <th>位标5</th>
+          <th>人员报警</th>
+        
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>徽章1</td>
+          <td><div id="d11">--米</td>
+          <td><div id="d21">--米</td>
+          <td><div id="d31">--米</td>
+          <td><div id="d41">--米</td>
+          <td><div id="d51">--米</td>
+          <td><div id="a11">无</td>
+        
+        </tr>
+        <tr>
+          <td>徽章2</td>
+          <td><div id="d12">--米</td>
+          <td><div id="d22">--米</td>
+          <td><div id="d32">--米</td>
+          <td><div id="d42">--米</td>
+          <td><div id="d52">--米</td>
+          <td><div id="a12">无</td>
+      
+        </tr>
+        <tr>
+          <td>徽章3</td>
+          <td><div id="d13">--米</td>
+          <td><div id="d23">--米</td>
+          <td><div id="d33">--米</td>
+          <td><div id="d43">--米</td>
+          <td><div id="d53">--米</td>
+          <td><div id="a13">无</td>
+        </tr>
+
+        <tr>
+          <td>火势报警</td>
+          <td><div id="h11" >无</td>
+          <td><div id="h12" >无</td>
+          <td><div id="h13" >无</td>
+          <td><div id="h14" >无</td>
+          <td><div id="h15" >无</td>
+          <td><div >\</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  
+  <div class="main">
+    <div> <font face="华文琥珀" style="position: sticky; font-size: 2.5rem;top: 400px; left: 250px;  background: #0a0c0900;
+      color: #173b6aed;">距离位标最近的前3数据</font></div> 
+      
+  </div>
+  <div class="chart">
+    <table>
+      <thead>
+        <tr>
+          <th>位标</th>
+          <th>徽章1</th>
+          <th>位标</th>
+          <th>徽章2</th>
+          <th>位标</th>
+          <th>徽章3</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><div id="w11"></td> <!-- 表示第一行位标1的 -->
+          <td><div id="md11">--米</td><!-- 表示第一行徽章1的 -->
+          <td><div id="w12"></td> <!-- 表示第一行位标2的 -->
+          <td><div id="md12">--米</td><!-- 表示第一行徽章2的 -->
+          <td><div id="w13"></td> <!-- 表示第一行位标3的 -->
+          <td><div id="md13">--米</td><!-- 表示第一行徽章3的 -->
+        </tr>
+        <tr>
+          <td><div id="w21"></td><!-- 表示第二行位标1的 -->
+          <td><div id="md21">--米</td><!-- 表示第二行徽章1的 -->
+          <td><div id="w22"></td> <!-- 表示第二行 位标2的-->
+          <td><div id="md22">--米</td>
+          <td><div id="w23"></td> <!-- 表示第二行 位标3的-->
+          <td><div id="md23">--米</td>
+        </tr>
+        <tr>
+          <td><div id="w31"></td><!-- 表示第三行位标1的 -->
+          <td><div id="md31">--米</td>
+          <td><div id="w32"></td> <!-- 表示第三行位标2的 -->
+          <td><div id="md32">--米</td>
+          <td><div id="w33"></td> <!-- 表示第三行位标3的 -->
+          <td><div id="md33">--米</td>
+        </tr> 
+       
+      </tbody>
+    </table>
+  </div>
+  <div> <font face="华文琥珀" style="position: absolute;  font-size: 4rem; top: 13%;   left: 60%;  background: #0a0c0900;
+    color: #173b6aed;">创新实验室定位图示</font></div>
+
+  <script>
+ 
+    var cvs = document.getElementById('cvs');
+    var ctx = cvs.getContext('2d');
+
+    // 坐标轴距离画布上右下左的边距
+    var padding = {
+        top:20,
+        right:20,
+        bottom:100,
+        left:50,    
+    }
+    // 坐标轴中箭头的宽和高
+    var arrow = {
+        width:12,
+        height:20
+    }
+    // 求坐标轴上顶点的坐标
+    var vertexTop = {
+        x:padding.left,
+        y:padding.top
+    }
+    // 求坐标轴原点的坐标
+    var origin = {
+        x:padding.left,
+        y:cvs.height - padding.bottom
+    }
+    // 求坐标轴右顶点的坐标
+    var vertexRight = {
+        x:cvs.width - padding.left+50,
+        y:cvs.height - padding.bottom
+    }
+
+    /*
+    //设置线宽
+    ctx.lineWidth = 2;
+    //画坐标轴的两条线
+    ctx.beginPath();
+    ctx.moveTo(vertexTop.x,vertexTop.y);
+    ctx.lineTo(origin.x,origin.y);
+    ctx.lineTo(vertexRight.x,vertexRight.y);
+    ctx.stroke();
+    //如何画箭头
+    //画顶上箭头
+    // ^
+    // |
+    // |
+    ctx.beginPath();
+    ctx.moveTo(vertexTop.x,vertexTop.y);
+    ctx.lineTo(vertexTop.x - arrow.width/2,vertexTop.y + arrow.height);
+    ctx.lineTo(vertexTop.x,vertexTop.y + arrow.height/2);
+    ctx.lineTo(vertexTop.x + arrow.width/2,vertexTop.y + arrow.height);
+    ctx.fill();
+ 
+    //画右边的箭头
+    // --->
+    ctx.beginPath();
+    ctx.moveTo(vertexRight.x,vertexRight.y);
+    ctx.lineTo(vertexRight.x - arrow.height,vertexRight.y - arrow.width);
+    ctx.lineTo(vertexRight.x - arrow.height/2,vertexRight.y);
+    ctx.lineTo(vertexRight.x - arrow.height,vertexRight.y + arrow.width);
+    ctx.fill();
+ */
+    /*
+     * 在坐标轴中指定位置画点，坐标算法：
+     * 点的x轴：原点x坐标 + 点到原点的水平距离
+     * 点的y轴：原点y坐标 - 点到原点的垂直距离
+     *
+     10*5*8
+     *20倍
+     */
+
+
+   /* var beishu=40
+    //定义点的坐标
+    var total = [ [0,0],[0,7*beishu],[3*beishu,8*beishu],[3*beishu,6*beishu],[10*beishu,6*beishu],
+    [10*beishu,0], [0,0],[0,7*beishu],[3*beishu,8*beishu],[10*beishu,8*beishu],[10*beishu,6*beishu],
+    ]*/
+    /*//在坐标中画点 使用循环遍历数组中的坐标
+    //设置颜色
+    ctx.fillStyle = "green";
+    total.forEach(function(arr){
+        ctx.fillRect(origin.x + arr[0],origin.y - arr[1],5,5);
+    });*/
+    //根据点连线
+    //防止重绘
+    /*
+    ctx.beginPath();
+    ctx.lineWidth = 3;
+    ctx.strokeStyle = "black";
+    total.forEach(function (arr){total
+        ctx.lineTo(origin.x + arr[0] + 1.8,origin.y - arr[1] + 1.8);
+    });
+    //描边
+    ctx.stroke();
+*/
+/*
+var w =[ 
+431,200,
+410,360,
+253,255,
+120,150,
+75,310
+]*/
+/*var w =[ 
+425,210,
+395,370,
+280,295,
+60,135,
+60,350
+]*/
+var w =[ 
+390,320,
+400,375,
+337,342,
+285,310,
+275,365
+]
+
+/*
+//人员旗帜位置
+{
+   
+    var ps =[220,420,245,420,270,420]
+
+
+    var w1=new Image()
+    w1.src="http://webmap0.map.bdstatic.com/wolfman/static/common/images/us_cursor_9517a2b.png"
+    w1.onload=function()
+    {
+      ctx.drawImage(w1,0,49,16,50,w[0],w[1],20,60)
+
+    }
+    var w2=new Image()
+    w2.src="http://webmap0.map.bdstatic.com/wolfman/static/common/images/us_cursor_9517a2b.png"
+    w2.onload=function()
+    {
+      ctx.drawImage(w2,16,49,16,50,w[2],w[3],20,60)
+
+    }
+    var w3=new Image()
+    w3.src="http://webmap0.map.bdstatic.com/wolfman/static/common/images/us_cursor_9517a2b.png"
+    w3.onload=function()
+    {
+      ctx.drawImage(w3,32,49,16,50,w[4],w[5],20,60)
+    
+    }
+    var w4=new Image()
+    w4.src="http://webmap0.map.bdstatic.com/wolfman/static/common/images/us_cursor_9517a2b.png"
+    w4.onload=function()
+    {
+      ctx.drawImage(w4,48,49,16,50,w[6],w[7],20,60)
+      
+    }
+    var w5=new Image()
+    w5.src="http://webmap0.map.bdstatic.com/wolfman/static/common/images/us_cursor_9517a2b.png"
+    w5.onload=function()
+    {
+      ctx.drawImage(w5,64,49,16,50,w[8],w[9],20,60)
+    
+    }
+
+
+
+
+
+    var r1=new Image()
+    r1.src="http://webmap0.map.bdstatic.com/wolfman/static/common/images/us_cursor_9517a2b.png"
+    r1.onload=function()
+    {
+      ctx.drawImage(r1,0,22,18,27,ps[0],ps[1],20,30)
+    
+    }
+    var r2=new Image()
+    r2.src="http://webmap0.map.bdstatic.com/wolfman/static/common/images/us_cursor_9517a2b.png"
+    r2.onload=function()
+    {
+      ctx.drawImage(r2,18,22,18,27,ps[2],ps[3],20,30)
+    
+    }
+    var r3=new Image()
+    r3.src="http://webmap0.map.bdstatic.com/wolfman/static/common/images/us_cursor_9517a2b.png"
+    r3.onload=function()
+    {
+      ctx.drawImage(r3,36,22,18,27,ps[4],ps[5],20,30)
+      
+    }
+}*/
+ // 三点定位函数，分别传入 参考点a、b、c的x、y坐标、待测点与参考点a的距离
+ function threePointLocation(ax, ay, ad, bx, by, bd, cx, cy, cd)
+ {
+   /*
+     说明：参考的三点坐标及距离位置点的距离。
+     不适用情况：三个参考点连成的三角形其两边（直角三角形的直角边）不能平行于xy坐标轴，例如p1(0,0),p2(3,0),p3(0,4),交点(3,4)
+     测试数据：p1(0,0),p2(3,4),p3(6,0),交点(6,8)
+   */
+   //var ref_x = [0, 3, 6];
+   //var ref_y = [0, 4, 0];
+   //var ref_d = [4, 3, 4];
+   var ref_x = [];
+   var ref_y = [];
+   var ref_d = [];
+   // 计算出的三组 (d[i]方-d[j]方-x[i]方+y[j]方+x[j]方-y[i]方)/(2*(x[j]-x[i]))
+   var dxyx = [];
+   // 计算出的三组 (d[i]方-d[j]方-x[i]方+y[j]方+x[j]方-y[i]方)/(2*(y[j]-y[i]))
+   var dxyy = [];
+   // 计算出的三组 (x[i]-x[j])/(y[i]-y[j])
+   var x_divide_y = [];
+   // 计算出的三组 (y[i]-y[j])/(x[i]-x[j])
+   var y_divide_x = [];
+   // 计算出的三组x y坐标
+   var temp_x = [], temp_y = [];
+   // 平均x y坐标
+   var x = 0, y = 0;
+   var i = 0, j = 0, k = 0;
+   // 存储交点p坐标
+   var p = JSON.parse("{\"x\": 0, \"y\": 0}");
+ 
+   // 初始化数据
+   ref_x.push(ax, bx, cx);
+   ref_y.push(ay, by, cy);
+   ref_d.push(ad, bd, cd);
+
+
+   for(i = 0; i < 3; i++)
+   {
+     //console.log("p[" + i +"](" + ref_x[i] + ", " + ref_y[i] + "), dis=" + ref_d[i] + "\n");
+
+     j = (i + 1) > 2 ? 2 : (i + 1);
+     k = k > 1 ? 0 : k;
+     
+     //console.log("numerator:" + (ref_d[k] * ref_d[k] - ref_d[j] * ref_d[j] - ref_x[k] * ref_x[k] + ref_y[j] * ref_y[j] + ref_x[j] * ref_x[j] - ref_y[k] * ref_y[k]));
+     if(ref_x[j] - ref_x[k] != 0) 
+       dxyx[i] = (ref_d[k] * ref_d[k] - ref_d[j] * ref_d[j] - ref_x[k] * ref_x[k] + ref_y[j] * ref_y[j] + ref_x[j] * ref_x[j] - ref_y[k] * ref_y[k]) / 2 /(ref_x[j] - ref_x[k]);
+     else
+       dxyx[i] = 0;
+
+     if(ref_y[j] - ref_y[k] != 0) 
+       dxyy[i] = (ref_d[k] * ref_d[k] - ref_d[j] * ref_d[j] - ref_x[k] * ref_x[k] + ref_y[j] * ref_y[j] + ref_x[j] * ref_x[j] - ref_y[k] * ref_y[k]) / 2 /(ref_y[j] - ref_y[k]);
+     else
+       dxyy[i] = 0;
+
+     if(ref_y[j] - ref_y[k] != 0)
+       x_divide_y[i] = (ref_x[j] - ref_x[k]) / (ref_y[j] - ref_y[k]);
+     else
+       x_divide_y[i] = 0;
+
+     if(ref_x[j] - ref_x[k] != 0)
+       y_divide_x[i] = (ref_y[j] - ref_y[k]) / (ref_x[j] - ref_x[k]);
+     else
+       y_divide_x[i] = 0; 
+     //console.log("dxyx[" + i + "]:" + dxyx[i] + ", dxyy[" + i + "]:" + dxyy[i]);
+     //console.log("x_divide_y[" + i + "]:" + x_divide_y[i] + ", y_divide_x[" + i + "]:" + y_divide_x[i]);
+     k++;
+   }
+   j = 0;
+   k = 0;
+   for(i = 0; i < 3; i++)
+   {
+     j = (i + 1) > 2 ? 2 : (i + 1);
+     k = k > 1 ? 0 : k;
+     if(x_divide_y[k] - x_divide_y[j] != 0)
+     {
+       temp_x[i] = (dxyy[k] - dxyy[j]) / (x_divide_y[k] - x_divide_y[j]);
+       temp_y[i] = (dxyx[k] - dxyx[j]) / (y_divide_x[k] - y_divide_x[j]);
+     }
+     else
+     {
+       temp_x[i] = 0;
+       temp_y[i] = 0;
+     }
+   }
+
+
+   x = (temp_x[0] + temp_x[1] + temp_x[2]) / 3;
+   y = (temp_y[0] + temp_y[1] + temp_y[2]) / 3;
+
+   // console.log("\n[ x:" + x + ", y:" + y + " ]\n"); 
+   
+   p.x = x;
+   p.y = y;
+
+ // p.x = 10;
+ // p.y = 55;
+
+   return p;
+ }
+
+
+
+ /*
+          //console.log("w内容是");
+          //window.alert('hello h1');
+          var disten1 = 3*40;
+          var disten2 = 3*40;
+          var disten3 = 3*40;
+          var num1 = 1-1;//提取位标数字
+          var num2 = 2-1;//提取位标数字
+          var num3 = 3-1;//提取位标数字   
+          var n=threePointLocation(w[num1*2],w[num1*2+1],disten1,w[num2*2],w[num2*2+1],disten2,w[num3*2],w[num3*2+1],disten3);
+          //console.log("w[num1*2]坐标是%f",w[num2*2+1]);
+          var xh1=n.x;
+          var yh1=n.y;
+          console.log("x坐标是%f",n.x);
+          console.log("y距离是%f",n.y);
+
+
+         
+      function updatePos(x, y) {
+        //ctx.restore()
+            ctx.clearRect(0, 0,500,500);
+           
+          console.log("传入的参数值：", x, y);
+          var r1=new Image();
+          r1.src="http://webmap0.map.bdstatic.com/wolfman/static/common/images/us_cursor_9517a2b.png"
+
+          r1.onload=function()
+          {
+          ctx.drawImage(r1,0,22,18,27,x, y,20,30);
+        
+          //ctx.clearRect(x, y,20,29);
+          }
+         
+          }
+         
+          setInterval("updatePos(xh1,yh1);", 100);
+          
+
+*/
+
+//循环更新数据
+function qqqq()
+{
+
+  ctx.clearRect(0, 0,500,500);
+  // console.log("w11内容是");
+
+    //数据处理更新
+      if($("#d11").val()!=null)//有定义
+        {
+        
+          //console.log("w内容是");
+          //window.alert('hello h1');
+          var disten1 = $("#d11").val()*40;
+          var disten2 = $("#d21").val()*40;
+          var disten3 = $("#d31").val()*40;
+          var num1 = $("#w11").text().replace(/[^\d]/g,' ')-1;//提取位标数字
+          var num2 = $("#w21").text().replace(/[^\d]/g,' ')-1;//提取位标数字
+          var num3 = $("#w31").text().replace(/[^\d]/g,' ')-1;//提取位标数字   
+          var n=threePointLocation(w[num1*2],w[num1*2+1],disten1,w[num2*2],w[num2*2+1],disten2,w[num3*2],w[num3*2+1],disten3);
+
+          xh1=n.x;
+          yh1=n.y;
+
+          var r1=new Image()
+          r1.src="http://webmap0.map.bdstatic.com/wolfman/static/common/images/us_cursor_9517a2b.png"
+          r1.onload=function()
+          {
+            ctx.drawImage(r1,0,22,18,27,xh1,yh1,20,30)
+           
+          }
+          console.log("x坐标是%f",n.x);
+          console.log("y坐标是%f",n.y);
+        }
+  
+      if($("#d12").val()!=null)//有定义
+        {
+    
+            //window.alert('hello h2');
+            var disten1 = $("#d12").val()*40;
+            var disten2 = $("#d22").val()*40;
+            var disten3 = $("#d32").val()*40;
+        
+            var num1 = $("#w12").text().replace(/[^\d]/g,' ')-1;//提取位标数字
+            var num2 = $("#w22").text().replace(/[^\d]/g,' ')-1;//提取位标数字
+            var num3 = $("#w32").text().replace(/[^\d]/g,' ')-1;//提取位标数字
+        
+            var n=threePointLocation(w[num1*2],w[num1*2+1],disten1,w[num2*2],w[num2*2+1],disten2,w[num3*2],w[num3*2+1],disten3);
+            xh2=n.x;
+            yh2=n.y;
+            
+            var r2=new Image()
+            r2.src="http://webmap0.map.bdstatic.com/wolfman/static/common/images/us_cursor_9517a2b.png"
+            r2.onload=function()
+            {
+             
+              ctx.drawImage(r2,18,22,18,27,xh2,yh2,20,30)
+            
+            }
+            console.log("x坐标是%f",n.x);
+            console.log("y坐标是%f",n.y);
+        }
+  
+      if($("#d13").val()!=null)//有定义
+          {
+      
+              //window.alert('hello h3');
+              var disten1 = $("#d13").val()*40;
+              var disten2 = $("#d23").val()*40;
+              var disten3 = $("#d33").val()*40;
+          
+              var num1 = $("#w13").text().replace(/[^\d]/g,' ')-1;//提取位标数字
+              var num2 = $("#w23").text().replace(/[^\d]/g,' ')-1;//提取位标数字
+              var num3 = $("#w33").text().replace(/[^\d]/g,' ')-1;//提取位标数字
+          
+              var n=threePointLocation(w[num1*2],w[num1*2+1],disten1,w[num2*2],w[num2*2+1],disten2,w[num3*2],w[num3*2+1],disten3);
+              xh3=n.x;
+              yh3=n.y;
+              
+              var r3=new Image()
+              r3.src="http://webmap0.map.bdstatic.com/wolfman/static/common/images/us_cursor_9517a2b.png"
+              r3.onload=function()
+              {
+                ctx.drawImage(r3,36,22,18,27,xh3,yh3,20,30)
+
+              }
+              console.log("x坐标是%f",n.x);
+              console.log("y坐标是%f",n.y);
+          }
+          
+      if($("#a11").text()=="有"){window.alert('徽章1正在发出警报');}
+      if($("#a12").text()=="有"){window.alert('徽章2正在发出警报');}
+      if($("#a13").text()=="有"){window.alert('徽章3正在发出警报');}
+
+
+      if($("#h11").text()=="有"){window.alert('位标1有火情');}
+      if($("#h12").text()=="有"){window.alert('位标2有火情');}
+      if($("#h13").text()=="有"){window.alert('位标3有火情');}
+      if($("#h14").text()=="有"){ console.log("x坐标cccccccccccc")
+        window.alert('位标4有火情');}
+      if($("#h15").text()=="有"){window.alert('位标5有火情');}
+    
+
+}
+
+
+
+setInterval("qqqq();", 500);
+
+/*
+    ctx.font="50px 微软雅黑"
+    ctx.fillText("创新实验室",130,50)
+    ctx.font="40px 微软雅黑"
+    ctx.fillText("前门",50,450)
+    ctx.font="40px 微软雅黑"
+    ctx.fillText("后门",380,450)
+*/
+    </script>
+</div>
+  </div>
+  <!-- 页尾 -->
+  <embed src="./images/wolve.mp3"  autostart="true" loop="true" volume="100" width=0 height=0 >
+  <div class="footer">苦果室内定位</div>
+  </div>
+</body>
+</html>
